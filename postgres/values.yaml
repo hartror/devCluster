@@ -1,0 +1,14 @@
+auth:
+  enablePostgresUser: true
+  postgresPassword: orange
+
+networkPolicy:
+  enabled: true
+
+primary:
+  persistence:
+    existingClaim: postgres-pvc
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30432
