@@ -1,7 +1,9 @@
+set dotenv-load
+
 nginxIngressYaml := "https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml"
 argoCdYaml := "https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
 
-cluster: createCluster certManager nginxIngress argo argoLogin
+cluster: createCluster nginxIngress certManager argo argoLogin
 
 ## Cluster
 
@@ -37,14 +39,12 @@ argo:
     kubectl create namespace argocd
     kubectl apply -n argocd -f {{argoCdYaml}} 
     just argoReady
-    sleep 5
     kubectl apply --validate=false -f argocd/ingress.yaml
 
 argoReady:
     kubectl wait \
         -n argocd \
-        --for=condition=Ready pod \
-        -l app.kubernetes.io/name=argocd-server \
+        --for=condition=Ready pod --all \
         --timeout=120s
 
 argoLogin:
