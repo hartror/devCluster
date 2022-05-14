@@ -120,8 +120,13 @@ helmRepo:
 
 temporalHelmPath := "vendor/temporal-helm-charts"
 temporalPath := "vendor/temporal"
-temporal-sql-tool := temporalPath + "/temporal-sql-tool"
-temporalPostgres := temporalPath + "/schema/postgresql/v96"
+
+
+temporalAdminCmd := "kubectl exec -i services/temporaltest-admintools --"
+temporal-sql-tool := temporalAdminCmd + " temporal-sql-tool"
+
+
+temporalPostgres := "schema/postgresql/v96"
 temporalPostgresTemporal := temporalPostgres + "/temporal/versioned"
 temporalPostgresVisibility := temporalPostgres + "/visibility/versioned"
 
@@ -142,21 +147,27 @@ temporal:
 temporalDelete:
     cd {{temporalHelmPath}}; helm delete temporaltest
 
-temporalDb: temporalSqlTool
-    ./{{temporal-sql-tool}} create-database -database temporal
-    ./{{temporal-sql-tool}} create-database -database temporal
-    SQL_DATABASE=temporal ./{{temporal-sql-tool}} setup-schema -v 0.0
-    SQL_DATABASE=temporal ./{{temporal-sql-tool}} update -schema-dir {{temporalPostgresTemporal}}
+temporalDb:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    {{temporalAdminCmd}} \
+        env \
+        SQL_PLUGIN=postgres \
+        SQL_HOST=postgres-postgresql \
+        SQL_PORT=5432 \
+        SQL_USER=postgres \
+        SQL_PASSWORD=orange \
+        /bin/bash << EOF
+            set -euxo pipefail
+            temporal-sql-tool create-database -database temporal
+            temporal-sql-tool create-database -database temporal_visibility
+            SQL_DATABASE=temporal temporal-sql-tool setup-schema -v 0.0
+            SQL_DATABASE=temporal temporal-sql-tool update -schema-dir {{temporalPostgresTemporal}}
 
-    ./{{temporal-sql-tool}} create-database -database temporal_visibility
-    SQL_DATABASE=temporal_visibility ./{{temporal-sql-tool}} setup-schema -v 0.0
-    SQL_DATABASE=temporal_visibility ./{{temporal-sql-tool}} update -schema-dir {{temporalPostgresVisibility}}
-
-temporalSqlTool: temporalClone
-    cd vendor/temporal; make temporal-sql-tool
-
-temporalClone:
-    if test ! -d "./vendor/temporal"; then git clone https://github.com/temporalio/temporal.git vendor/temporal fi
+            temporal-sql-tool create-database -database temporal_visibility
+            SQL_DATABASE=temporal_visibility temporal-sql-tool setup-schema -v 0.0
+            SQL_DATABASE=temporal_visibility temporal-sql-tool update -schema-dir {{temporalPostgresVisibility}}
+    EOF
 
 temporalHelmClone:
     if test ! -d "{{temporalHelmPath}}"; then git clone https://github.com/temporalio/helm-charts.git {{temporalHelmPath}} fi
