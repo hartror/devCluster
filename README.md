@@ -31,4 +31,15 @@ Postgresql setup to store files on host in `files/postgres/data`.
 
 ### Temporal.io
 
-Work in progress ...
+#### TODO
+
+- Namespace setup
+
+```
+kubectl exec -it services/temporaltest-admintools /bin/bash
+
+```
+
+#### Dependencies
+
+- golang

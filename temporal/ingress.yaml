@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-web
+  labels:
+    app.kubernetes.io/component: web
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/part-of: temporal
+    app.kubernetes.io/version: 1.16.2
+    helm.sh/chart: temporal-0.16.2
+  annotations:
+    meta.helm.sh/release-name: temporaltest
+    meta.helm.sh/release-namespace: default
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8088
+      targetPort: http
+      nodePort: 32027
+  selector:
+    app.kubernetes.io/component: web
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/name: temporal
+  type: NodePort
+  sessionAffinity: None

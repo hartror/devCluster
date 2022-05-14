@@ -10,14 +10,22 @@ nodes:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true"
     extraPortMappings:
+      # ArgoCD
       - containerPort: 80
         hostPort: 80
         protocol: TCP
       - containerPort: 443
         hostPort: 443
         protocol: TCP
+      # Postgres
       - containerPort: 30432
         hostPort: 5432
+      # Temporal
+      - containerPort: 32026
+        hostPort: 7233
+      - containerPort: 32027
+        hostPort: 8088
+
     extraMounts:
       - hostPath: /Users/rory.hart/personal/kind/files
         containerPath: /var/local-path-provisioner
