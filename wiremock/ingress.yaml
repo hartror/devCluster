@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wiremock-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: /v1/
+            backend:
+              service:
+                name: wiremock
+                port:
+                  number: 9021
+          - pathType: Prefix
+            path: /__admin/
+            backend:
+              service:
+                name: wiremock
+                port:
+                  number: 9021

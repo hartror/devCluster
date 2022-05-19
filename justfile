@@ -114,6 +114,7 @@ postgresDelete:
 helmRepo:
     helm repo add nginx-stable https://helm.nginx.com/stable
     helm repo add jetstack https://charts.jetstack.io
+    helm repo add gitkent https://gitkent.github.io/helm-charts
     helm repo update
 
 ## Temporal
@@ -130,7 +131,7 @@ temporalPostgres := "schema/postgresql/v96"
 temporalPostgresTemporal := temporalPostgres + "/temporal/versioned"
 temporalPostgresVisibility := temporalPostgres + "/visibility/versioned"
 
-temporal:
+temporal: temporalHelmClone
     cd {{temporalHelmPath}}; helm install \
         -f ../../temporal/values.postgresql.yaml \
         --set server.replicaCount=1 \
@@ -143,6 +144,7 @@ temporal:
         --set server.frontend.service.type=NodePort \
         --set server.frontend.service.nodePort=32026 \
         temporaltest . --timeout 15m
+    just temporalDb
 
 temporalDelete:
     cd {{temporalHelmPath}}; helm delete temporaltest
@@ -167,7 +169,14 @@ temporalDb:
             temporal-sql-tool create-database -database temporal_visibility
             SQL_DATABASE=temporal_visibility temporal-sql-tool setup-schema -v 0.0
             SQL_DATABASE=temporal_visibility temporal-sql-tool update -schema-dir {{temporalPostgresVisibility}}
+            tctl --namespace default namespace re
     EOF
 
 temporalHelmClone:
     if test ! -d "{{temporalHelmPath}}"; then git clone https://github.com/temporalio/helm-charts.git {{temporalHelmPath}} fi
+
+##  Wiremock
+
+wiremock:
+    helm install wiremock gitkent/wiremock --version 0.1.3
+    kubectl apply -f wiremock/ingress.yaml
