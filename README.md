@@ -71,7 +71,7 @@ just cluster argo
 
 3. Run `just argo argoLogin` to start ArgoCD.
 
-You can then access the [web console](argocd.local) and use the cli
+You can then access the [web console](https://argocd.local) and use the cli
 `argocd app list`.
 
 **Troubleshooting**
@@ -107,7 +107,7 @@ Access the database with `psql -U postgres -h localhost`.
 Access the [web console](http://localhost:8088/) and use the shell with `tctl`
 eg. `tctl cl health`.
 
-### Wiremock 😼
+### [Wiremock](https://wiremock.org/) 😼
 
 1. Run `just wiremock`.
 
