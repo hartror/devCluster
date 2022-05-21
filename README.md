@@ -130,7 +130,17 @@ curl -X POST \
 - [ ] pgAdmin
 - [ ] https://hasura.io/
 - [ ] knative
+- [ ] Redis
+- [ ] Kafka
 
 ### DX TODO 👩‍💻
 
 - [ ] Enable commands to run their dependencies.
+- [ ] Keep self signed certificates consistent between deploys.
+- [ ] Run cluster in CI to ensure it keeps working.
+
+### Techdebt 🚧
+
+- [ ] get `argo` installed using helm.
+- [ ] get `temporal` installed using argo.
+- [ ] get `wiremock` installed using argo.
