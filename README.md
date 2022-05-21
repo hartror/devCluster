@@ -65,6 +65,10 @@ just cluster argo
 127.0.0.1 argocd.local
 ```
 
+**Todo** ✅
+
+- [ ] ArgoCD via helm
+
 3. Run `just argo argoLogin` to start ArgoCD.
 
 You can then access the [web console](argocd.local) and use the cli
@@ -104,6 +108,10 @@ Access the [web console](http://localhost:8088/) and use the shell with `tctl`
 eg. `tctl cl health`.
 
 ### Wiremock 😼
+
+1. Run `just wiremock`.
+
+Test
 
 ### More services to consider 🤔
 

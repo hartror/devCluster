@@ -35,17 +35,22 @@ certManager:
 
 ## ArgoCD 
 
-argo:
+argo: && argoReady argoLogin
     kubectl create namespace argocd
     kubectl apply -n argocd -f {{argoCdYaml}} 
-    just argoReady
     kubectl apply --validate=false -f argocd/ingress.yaml
 
 argoReady:
+    #!/usr/bin/env bash
+    set -euxo pipefail
     kubectl wait \
         -n argocd \
         --for=condition=Ready pod --all \
         --timeout=120s
+    while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' --insecure https://argocd.local/healthz)" != "200" ]]; 
+        do sleep 1; 
+    done
+
 
 argoLogin:
     argocd login \
@@ -182,5 +187,5 @@ temporalHelmClone:
 ##  Wiremock
 
 wiremock:
-    helm install wiremock gitkent/wiremock --version 0.1.3
+    helm install wiremock gitkent/wiremock --version 0.1.3 --wait
     kubectl apply -f wiremock/ingress.yaml
