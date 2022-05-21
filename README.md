@@ -1,7 +1,5 @@
 # A k8s Development Environment
 
----
-
 ![k8sDevEnv](/assets/logo.png)
 
 A [kind](https://helm.sh/) based k8s cluster 🕸️ which can be used as a base for
