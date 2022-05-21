@@ -95,15 +95,13 @@ Access the database with `psql -U postgres -h localhost`.
 
 - [ ] List and drop databases.
 
-### Temporal.io 🎻
+### [Temporal.io](http://temporal.io) 🎻
 
-**Todo** ✅
+1. Install the temporal cli tool (`brew install tctl`).
+2. Run `just temporal`.
 
-- Namespace setup
-
-```
-kubectl exec -it services/temporaltest-admintools /bin/bash
-```
+Access the [web console](http://localhost:8088/) and use the shell with `tctl`
+eg. `tctl cl health`.
 
 ### Wiremock 😼
 
@@ -111,3 +109,8 @@ kubectl exec -it services/temporaltest-admintools /bin/bash
 
 - [ ] pgAdmin
 - [ ] https://hasura.io/
+- [ ] knative
+
+### DX TODO 👩‍💻
+
+- [ ] Enable commands to run their dependencies.

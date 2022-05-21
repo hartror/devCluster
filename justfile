@@ -122,16 +122,14 @@ helmRepo:
 temporalHelmPath := "vendor/temporal-helm-charts"
 temporalPath := "vendor/temporal"
 
-
 temporalAdminCmd := "kubectl exec -i services/temporaltest-admintools --"
 temporal-sql-tool := temporalAdminCmd + " temporal-sql-tool"
-
 
 temporalPostgres := "schema/postgresql/v96"
 temporalPostgresTemporal := temporalPostgres + "/temporal/versioned"
 temporalPostgresVisibility := temporalPostgres + "/visibility/versioned"
 
-temporal: temporalHelmClone
+temporal: temporalHelmClone && temporalDb
     cd {{temporalHelmPath}}; helm install \
         -f ../../temporal/values.postgresql.yaml \
         --set server.replicaCount=1 \
@@ -143,8 +141,7 @@ temporal: temporalHelmClone
         --set web.service.nodePort=32027 \
         --set server.frontend.service.type=NodePort \
         --set server.frontend.service.nodePort=32026 \
-        temporaltest . --timeout 15m
-    just temporalDb
+        temporaltest . --wait
 
 temporalDelete:
     cd {{temporalHelmPath}}; helm delete temporaltest
@@ -169,11 +166,18 @@ temporalDb:
             temporal-sql-tool create-database -database temporal_visibility
             SQL_DATABASE=temporal_visibility temporal-sql-tool setup-schema -v 0.0
             SQL_DATABASE=temporal_visibility temporal-sql-tool update -schema-dir {{temporalPostgresVisibility}}
-            tctl --namespace default namespace re
     EOF
 
+temporalNamespace:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    if ! grep -q "Name: default" <<< `tctl namespace list`; then \
+        tctl namespace re; \
+    fi
+
 temporalHelmClone:
-    if test ! -d "{{temporalHelmPath}}"; then git clone https://github.com/temporalio/helm-charts.git {{temporalHelmPath}} fi
+    if test ! -d "{{temporalHelmPath}}"; then git clone https://github.com/temporalio/helm-charts.git {{temporalHelmPath}}; fi
+    cd {{temporalHelmPath}}; git pull
 
 ##  Wiremock
 
