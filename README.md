@@ -83,6 +83,8 @@ You can then access the [web console](https://argocd.local) and use the cli
 
 - [ ] Command to print web console login details.
 
+---
+
 ### [Postgresql](https://www.postgresql.org/) 💾
 
 1. Ensure you have ArgoCD setup.
@@ -99,6 +101,8 @@ Access the database with `psql -U postgres -h localhost`.
 
 - [ ] List and drop databases.
 
+---
+
 ### [Temporal.io](http://temporal.io) 🎻
 
 1. Install the temporal cli tool (`brew install tctl`).
@@ -106,6 +110,8 @@ Access the database with `psql -U postgres -h localhost`.
 
 Access the [web console](http://localhost:8088/) and use the shell with `tctl`
 eg. `tctl cl health`.
+
+---
 
 ### [Wiremock](https://wiremock.org/) 😼
 
@@ -124,6 +130,8 @@ curl -X POST \
 **Todo** ✅
 
 - [ ] Get rid of `/v1` path restriction.
+
+---
 
 ### More services to consider 🤔
 
