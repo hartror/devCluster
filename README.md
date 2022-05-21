@@ -111,7 +111,19 @@ eg. `tctl cl health`.
 
 1. Run `just wiremock`.
 
-Test
+Test with `curl -X POST http://localhost/v1/hello` and add fixtures with:
+
+```
+curl -X POST \
+    --data '{ "request": { "url": "/v1/get/this", "method": "GET" }, "response": { "status": 200, "body": "Here it is!\n" }}' \
+    http://localhost/__admin/mappings/new
+```
+
+> ⚠️ All urls must be under `/v1` for the moment.
+
+**Todo** ✅
+
+- [ ] Get rid of `/v1` path restriction.
 
 ### More services to consider 🤔
 
