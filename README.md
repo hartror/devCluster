@@ -16,9 +16,22 @@ to build applications 👩‍💻 on that is fast to setup and easy to maintain.
 
 Install the dependencies:
 
+- Docker Desktop for the containers 📦.
 - [just](https://github.com/casey/just) for running the environment.
 - [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) to run k8s.
 - and finally [helm](https://helm.sh/) to run your services.
+
+Setup Docker Desktop:
+
+_Docker Desktop > ⚙️ > Resources > Advanced_
+
+- CPUs: 6+
+- Memory: 8.00 GB+
+- Swap: 1 GB+
+
+_Docker Desktop > ⚙️ > Resources > File Sharing_
+
+Ensure the folder you have checked out is covered by the list eg. `/Users`.
 
 Then run the command:
 
@@ -68,17 +81,33 @@ You can then access the [web console](argocd.local) and use the cli
 
 ### [Postgresql](https://www.postgresql.org/) 💾
 
-Postgresql setup to store files on host in `files/postgres/data`.
+1. Ensure you have ArgoCD setup.
+2. Run `just postgres`.
+
+Access the database with `psql -U postgres -h localhost`.
+
+**Troubleshooting**
+
+- Are you running a database on port `5432` already?
+- Files are hosted in `files/postgres/data`.
+
+**Todo** ✅
+
+- [ ] List and drop databases.
 
 ### Temporal.io 🎻
 
-#### TODO
+**Todo** ✅
 
 - Namespace setup
 
 ```
 kubectl exec -it services/temporaltest-admintools /bin/bash
-
 ```
 
-### Wiremock
+### Wiremock 😼
+
+### More services to consider 🤔
+
+- [ ] pgAdmin
+- [ ] https://hasura.io/
